@@ -1,6 +1,5 @@
 package app.unattach.model;
 
-import javafx.fxml.FXML;
 import org.apache.commons.io.FilenameUtils;
 
 import java.security.InvalidParameterException;
@@ -31,8 +30,9 @@ public class FilenameFactory {
   public String getFilename(Email email, int bodyPartIndex, String attachmentName) {
     String template = schema;
     String name_or_email = email.getFromName().isEmpty() ? email.getFromEmail() : email.getFromName();
-    String attachmentBase = FilenameUtils.getBaseName(attachmentName);
-    String attachmentExtension = FilenameUtils.getExtension(attachmentName);
+    String normalisedAttachmentName = normalise(attachmentName);
+    String attachmentBase = FilenameUtils.getBaseName(normalisedAttachmentName);
+    String attachmentExtension = FilenameUtils.getExtension(normalisedAttachmentName);
     template = replaceRawAndNormalised(template, "FROM_EMAIL", email.getFromEmail(), FilenameFactory::simpleTrim);
     template = replaceRawAndNormalised(template, "FROM_NAME", email.getFromName(), FilenameFactory::simpleTrim);
     template = replaceRawAndNormalised(template, "FROM_NAME_OR_EMAIL", name_or_email, FilenameFactory::simpleTrim);
@@ -46,8 +46,9 @@ public class FilenameFactory {
     template = replaceRawAndNormalised(template, "LABEL_NAMES", getLabelNamesForFilenames(email), FilenameFactory::simpleTrim);
     template = replaceRawAndNormalised(template, "CUSTOM_LABEL_NAMES", getCustomLabelNamesForFilenames(email, unattachLabelIds), FilenameFactory::simpleTrim);
     template = replaceRawAndNormalised(template, "ATTACHMENT_NAME", attachmentName, FilenameFactory::basenameTrim);
-    template = replaceRawAndNormalised(template, "ATTACHMENT_BASE", attachmentBase, FilenameFactory::simpleTrim);
-    template = replaceRawAndNormalised(template, "ATTACHMENT_EXTENSION", attachmentExtension, FilenameFactory::simpleTrim);
+    // ATTACHMENT_BASE and ATTACHMENT_EXTENSION don't have RAW variants.
+    template = replace(template, "ATTACHMENT_BASE", attachmentBase, FilenameFactory::simpleTrim);
+    template = replace(template, "ATTACHMENT_EXTENSION", attachmentExtension, FilenameFactory::simpleTrim);
     if (template.contains("${")) {
       int start = template.indexOf("${");
       int end = template.indexOf("}", start);
@@ -99,7 +100,7 @@ public class FilenameFactory {
       replacement = "";
     }
     if (!patternString.startsWith("RAW_")) {
-      replacement = replacement.replaceAll("[^a-zA-Z0-9-_.@]", "_");
+      replacement = normalise(replacement);
     }
     if (matcher.find()) {
       String maxLengthGroup = matcher.group(2);
@@ -109,6 +110,10 @@ public class FilenameFactory {
       template = matcher.replaceFirst(replacementTrimmed);
     }
     return template;
+  }
+
+  private static String normalise(String filename) {
+    return filename.replaceAll("[^a-zA-Z0-9-_.@]", "_");
   }
 
   private static String simpleTrim(String replacement, @SuppressWarnings("unused") int maxLength, int newLength) {
