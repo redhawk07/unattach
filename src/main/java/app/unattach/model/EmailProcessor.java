@@ -128,7 +128,11 @@ public class EmailProcessor {
     if (!processSettings.processOption().shouldProcessEmbedded() && part.isMimeType("multipart/related")) {
       return false;
     }
+    String contentType = part.getContentType();
     String originalFilename = getFilename(part);
+    if (originalFilename == null && "message/rfc822".equals(contentType)) {
+      originalFilename = "inner_email_" + fileCounter + ".eml";
+    }
     if (!isDownloadable(processSettings.processOption(), part, originalFilename)) {
       return true;
     }
