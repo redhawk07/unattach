@@ -5,6 +5,8 @@ public final class Constants {
   public static final String CONTACT_EMAIL = "rok.strnisa@gmail.com";
   public static final String[] CURRENCIES = {"AUD", "CAD", "CHF", "EUR", "GBP", "USD"};
   public static final String DEFAULT_CURRENCY = "USD";
+  public static final String DEFAULT_DOWNLOADED_LABEL_NAME = "Unattach - Downloaded";
+  public static final String DEFAULT_REMOVED_LABEL_NAME = "Unattach - Removed";
   public static final String HOMEPAGE = "https://unattach.app";
   public static final String HOW_UNATTACH_WORKS_URL = HOMEPAGE + "#how-unattach-works";
   public static final String PRIVACY_POLICY_URL = HOMEPAGE + "/privacy-policy.txt";

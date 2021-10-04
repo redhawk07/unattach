@@ -62,7 +62,7 @@ public class EmailProcessor {
     return unattachLabelIds;
   }
 
-  static MimeMessage process(UserStorage userStorage, Email email, MimeMessage mimeMessage,
+  public static MimeMessage process(UserStorage userStorage, Email email, MimeMessage mimeMessage,
                              ProcessSettings processSettings, Set<String> originalAttachmentNames)
       throws IOException, MessagingException {
     EmailProcessor processor = new EmailProcessor(userStorage, email, mimeMessage, processSettings);

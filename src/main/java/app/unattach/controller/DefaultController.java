@@ -19,8 +19,6 @@ import java.util.function.Consumer;
 
 public record DefaultController(Model model) implements Controller {
   private static final Logger logger = Logger.get();
-  private static final String DEFAULT_DOWNLOADED_LABEL_NAME = "Unattach - Downloaded";
-  private static final String DEFAULT_REMOVED_LABEL_NAME = "Unattach - Removed";
 
   @Override
   public String createLabel(String name) {
@@ -50,13 +48,13 @@ public record DefaultController(Model model) implements Controller {
 
   @Override
   public String getOrCreateDownloadedLabelId() {
-    return getOrCreateLabelId(getConfig().getDownloadedLabelId(), DEFAULT_DOWNLOADED_LABEL_NAME,
+    return getOrCreateLabelId(getConfig().getDownloadedLabelId(), Constants.DEFAULT_DOWNLOADED_LABEL_NAME,
         getConfig()::saveDownloadedLabelId);
   }
 
   @Override
   public String getOrCreateRemovedLabelId() {
-    return getOrCreateLabelId(getConfig().getRemovedLabelId(), DEFAULT_REMOVED_LABEL_NAME,
+    return getOrCreateLabelId(getConfig().getRemovedLabelId(), Constants.DEFAULT_REMOVED_LABEL_NAME,
         getConfig()::saveRemovedLabelId);
   }
 

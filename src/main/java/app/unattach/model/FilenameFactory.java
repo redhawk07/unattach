@@ -15,7 +15,7 @@ public class FilenameFactory {
       "CATEGORY_FORUMS", "CATEGORY_PERSONAL", "CATEGORY_PROMOTIONS", "CATEGORY_SOCIAL", "CATEGORY_UPDATES",
       "CHAT", "DRAFT", "IMPORTANT", "INBOX", "SENT", "SPAM", "STARRED", "TRASH", "UNREAD"
   );
-  static final String DEFAULT_SCHEMA = "${ATTACHMENT_BASE}-${ID:-4}-${BODY_PART_INDEX}.${ATTACHMENT_EXTENSION}";
+  public static final String DEFAULT_SCHEMA = "${ATTACHMENT_BASE}-${ID:-4}-${BODY_PART_INDEX}.${ATTACHMENT_EXTENSION}";
 
   private final Map<String, Pattern> keyToPattern;
   private final String schema;
