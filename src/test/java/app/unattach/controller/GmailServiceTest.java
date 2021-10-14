@@ -173,7 +173,7 @@ public class GmailServiceTest {
       try (InputStream inputStream = new FileInputStream(newEmailBackup)) {
         MimeMessage newMimeMessage = new MimeMessage(session, inputStream);
         String content = getMainContent(newMimeMessage.getContent());
-        assertTrue(content.contains("Previous attachments"));
+        assertTrue(content.contains("Removed/modified attachments"));
         for (String attachment : attachments) {
           assertTrue(content.contains(attachment));
         }
@@ -214,7 +214,7 @@ public class GmailServiceTest {
     for (Email email : searchForEmailsThroughController(query)) {
       String downloadedLabelId = controller.getOrCreateDownloadedLabelId();
       String removedLabelId = controller.getOrCreateRemovedLabelId();
-      ProcessOption processOption = new ProcessOption(action, processEmbedded, true,
+      ProcessOption processOption = new ProcessOption(action, processEmbedded, false, true,
           true, downloadedLabelId, removedLabelId);
       String filenameSchema = "attachments/${ATTACHMENT_NAME}";
       SortedMap<String, String> idToLabel = controller.getIdToLabel();
