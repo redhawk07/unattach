@@ -6,7 +6,7 @@ import app.unattach.model.attachmentstorage.UserStorage;
 import app.unattach.model.service.*;
 import app.unattach.view.Action;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.gmail.model.ListLabelsResponse;
 import com.google.api.services.gmail.model.Message;
 import com.google.common.collect.Sets;
@@ -39,7 +39,7 @@ public class GmailServiceTest {
     try {
       UserStorage userStorage = new FileUserStorage();
       String emailAddress = "rok.strnisa@gmail.com";
-      JsonFactory factory = JacksonFactory.getDefaultInstance();
+      JsonFactory factory = GsonFactory.getDefaultInstance();
       ListLabelsResponse listLabelsResponse = TestStore.loadLabels(factory);
       SortedMap<String, String> idToLabel = GmailService.labelsResponseToMap(listLabelsResponse);
       Message simpleBefore = TestStore.loadMessage(factory, "1-simple-before");

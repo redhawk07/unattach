@@ -2,14 +2,16 @@ package app.unattach.model.service;
 
 import com.google.api.client.extensions.java6.auth.oauth2.VerificationCodeReceiver;
 import com.google.api.client.util.Throwables;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
-import org.mortbay.jetty.Connector;
-import org.mortbay.jetty.Request;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.AbstractHandler;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.handler.HandlerCollection;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -40,6 +42,7 @@ class LocalServerReceiver implements VerificationCodeReceiver {
     this.port = port;
   }
 
+  @Override
   public String getRedirectUri() throws IOException {
     if (port == -1) {
       port = getUnusedPort();
@@ -47,10 +50,12 @@ class LocalServerReceiver implements VerificationCodeReceiver {
     server = new Server(port);
 
     for (Connector connector : server.getConnectors()) {
-      connector.setHost(host);
+      ((ServerConnector) connector).setHost(host);
     }
 
-    server.addHandler(new CallbackHandler());
+    HandlerCollection handler = new HandlerCollection();
+    handler.addHandler(new CallbackHandler());
+    server.setHandler(handler);
 
     try {
       server.start();
@@ -62,6 +67,7 @@ class LocalServerReceiver implements VerificationCodeReceiver {
     return "http://" + host + ":" + port + CALLBACK_PATH;
   }
 
+  @Override
   public String waitForCode() throws IOException {
     lock.lock();
 
@@ -83,6 +89,7 @@ class LocalServerReceiver implements VerificationCodeReceiver {
     return result;
   }
 
+  @Override
   public void stop() throws IOException {
     if (server != null) {
       try {
@@ -104,7 +111,9 @@ class LocalServerReceiver implements VerificationCodeReceiver {
   }
 
   class CallbackHandler extends AbstractHandler {
-    public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch) throws IOException {
+    @Override
+    public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
       if (CALLBACK_PATH.equals(target)) {
         writeLandingHtml(request, response);
         response.flushBuffer();

@@ -2,7 +2,7 @@ package app.unattach.model;
 
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.gmail.model.ListLabelsResponse;
 import com.google.api.services.gmail.model.Message;
 
@@ -51,7 +51,7 @@ public class TestStore {
   }
 
   public static void main(String[] args) throws IOException {
-    JsonFactory factory = JacksonFactory.getDefaultInstance();
+    JsonFactory factory = GsonFactory.getDefaultInstance();
     Message message = loadMessage(factory, "1774618de184163d");
     for (Map.Entry<String, Object> entry : message.entrySet()) {
       System.out.println(entry.getKey());
