@@ -113,7 +113,7 @@ public record DefaultController(Model model) implements Controller {
 
   @Override
   public void openQueryLanguagePage() {
-    openWebPage("https://support.google.com/mail/answer/7190");
+    openWebPage(Constants.QUERY_LANGUAGE_URL);
   }
 
   @Override
