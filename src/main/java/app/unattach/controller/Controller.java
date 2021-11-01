@@ -30,4 +30,6 @@ public interface Controller {
   void signOut();
   void sendToServer(String contentDescription, String exceptionText, String userText);
   void subscribe(String emailAddress);
+  void saveConfigToFile(File selectedFile);
+  void loadConfigFromFile(File selectedFile);
 }

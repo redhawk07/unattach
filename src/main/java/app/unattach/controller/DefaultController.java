@@ -248,4 +248,27 @@ public record DefaultController(Model model) implements Controller {
       return false;
     }
   }
+
+  @Override
+  public void saveConfigToFile(File selectedFile) {
+    FileConfig fConfig = new FileConfig();
+    fConfig.saveConfigToFile(selectedFile);
+  }
+
+  @Override
+  public void loadConfigFromFile(File selectedFile) {
+    FileConfig fConfig = new FileConfig(selectedFile);
+    model.getConfig().saveDateFormat(fConfig.getDateFormat());
+    model.getConfig().saveRemoveOriginal(fConfig.getRemoveOriginal());
+    model.getConfig().saveDownloadedLabelId(fConfig.getDownloadedLabelId());
+    model.getConfig().saveEmailSize(fConfig.getEmailSize());
+    model.getConfig().saveFilenameSchema(fConfig.getFilenameSchema());
+    model.getConfig().saveLabelIds(fConfig.getLabelIds());
+    model.getConfig().saveProcessEmbedded(fConfig.getProcessEmbedded());
+    model.getConfig().saveRemovedLabelId(fConfig.getRemovedLabelId());
+    model.getConfig().saveSearchQuery(fConfig.getSearchQuery());
+    model.getConfig().saveSignInAutomatically(fConfig.getSignInAutomatically());
+    model.getConfig().saveSubscribeToUpdates(fConfig.getSubscribeToUpdates());
+    model.getConfig().saveTargetDirectory(fConfig.getTargetDirectory());
+  }
 }

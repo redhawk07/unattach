@@ -20,6 +20,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -29,6 +31,7 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -750,6 +753,47 @@ public class MainViewController {
       Scenes.showAndPreventMakingSmaller(dialog);
     } catch (IOException e) {
       logger.error("Failed to open the Unattach labels dialog.", e);
+    }
+  }
+
+  @FXML
+  private void onLoadConfigPressed() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Open Settings File");
+    String userHome = System.getProperty("user.home");
+    fileChooser.setInitialDirectory(new File(Paths.get(userHome).toString()));
+    fileChooser.getExtensionFilters().addAll(
+            new ExtensionFilter("Unattach Settings", "*.unattach"),
+            new ExtensionFilter("All Files", "*.*"));
+    File selectedFile = fileChooser.showOpenDialog(root.getScene().getWindow());
+    if (selectedFile != null) {
+      controller.loadConfigFromFile(selectedFile);
+      targetDirectoryTextField.setText(controller.getConfig().getTargetDirectory());
+      searchQueryTextField.setText(controller.getConfig().getSearchQuery());
+      processEmbeddedCheckMenuItem.setSelected(controller.getConfig().getProcessEmbedded());
+      permanentlyRemoveOriginalMenuItem.setSelected(controller.getConfig().getRemoveOriginal());
+      trashOriginalMenuItem.setSelected(!controller.getConfig().getRemoveOriginal());
+      signInAutomaticallyCheckMenuItem.setSelected(controller.getConfig().getSignInAutomatically());
+
+      String pattern = controller.getConfig().getDateFormat();
+      for( MenuItem menuItem : dateFormatMenu.getItems()) {
+        ((CheckMenuItem) menuItem).setSelected(menuItem.getText().equals(pattern));
+      };
+    }
+  }
+
+  @FXML
+  private void onSaveConfigPressed() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Save Settings to File");
+    String userHome = System.getProperty("user.home");
+    fileChooser.setInitialDirectory(new File(Paths.get(userHome).toString()));
+    fileChooser.getExtensionFilters().addAll(
+            new ExtensionFilter("Unattach Settings", "*.unattach"),
+            new ExtensionFilter("All Files", "*.*"));
+    File selectedFile = fileChooser.showSaveDialog(root.getScene().getWindow());
+    if (selectedFile != null) {
+      controller.saveConfigToFile(selectedFile);
     }
   }
 
