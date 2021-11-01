@@ -32,9 +32,9 @@ public class FileConfig extends BaseConfig {
         config.load(in);
       } catch (IOException e) {
         logger.error("Failed to load the config file.", e);
-      }  
-    }  
-  }  
+      }
+    }
+  }
 
   @Override
   public void saveConfig() {
