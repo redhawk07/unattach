@@ -2,6 +2,7 @@
 *.class
 *.log
 .DS_Store
+.factorypath
 
 # IntelliJ
 .idea/
